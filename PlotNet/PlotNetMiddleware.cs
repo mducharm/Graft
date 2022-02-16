@@ -3,19 +3,23 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace PlotNet;
 
 public class PlotNetMiddleware
 {
-    private const string EmbeddedFileNamespace = "PlotNetMiddleware";
-
     private readonly PlotNetOptions _options;
     private readonly StaticFileMiddleware _staticFileMiddleware;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    enum Routes { Redirect, Index, JSON, XML }
 
     public PlotNetMiddleware(
         RequestDelegate next,
@@ -44,27 +48,52 @@ public class PlotNetMiddleware
         var httpMethod = httpContext.Request.Method;
         var path = httpContext.Request.Path.Value ?? "";
 
-        // If the RoutePrefix is requested (with or without trailing slash), redirect to index URL
-        if (httpMethod == "GET" && Regex.IsMatch(path, $"^/?{Regex.Escape(_options.RoutePrefix)}/?$", RegexOptions.IgnoreCase))
-        {
-            // Use relative redirect to support proxy environments
-            var relativeIndexUrl = string.IsNullOrEmpty(path) || path.EndsWith("/")
-                ? "index.html"
-                : $"{path.Split('/').Last()}/index.html";
+        var route = GetRoute(path);
 
-            RespondWithRedirect(httpContext.Response, relativeIndexUrl);
-            return;
-        }
-
-        if (httpMethod == "GET" && Regex.IsMatch(path, $"^/{Regex.Escape(_options.RoutePrefix)}/?index.html$", RegexOptions.IgnoreCase))
+        if (httpMethod == "GET")
         {
-            await RespondWithIndexHtml(httpContext.Response);
-            return;
+
+            if (route == Routes.Redirect)
+            {
+                var relativeIndexUrl = string.IsNullOrEmpty(path) || path.EndsWith("/")
+                    ? "index.html"
+                    : $"{path.Split('/').Last()}/index.html";
+
+                httpContext.Response.StatusCode = 301;
+                httpContext.Response.Headers["Location"] = relativeIndexUrl;
+                return;
+            }
+            if (route == Routes.Index)
+            {
+                await RespondWithIndexHtml(httpContext.Response);
+                return;
+            }
+            if (route == Routes.JSON)
+            {
+                await RespondWithJSON(httpContext.Response);
+                return;
+            }
+            if (route == Routes.XML)
+            {
+                await RespondWithXML(httpContext.Response);
+                return;
+            }
+
         }
 
         await _staticFileMiddleware.Invoke(httpContext);
+
     }
 
+    private Task RespondWithXML(HttpResponse response)
+    {
+        throw new NotImplementedException();
+    }
+
+    private Task RespondWithJSON(HttpResponse response)
+    {
+        throw new NotImplementedException();
+    }
 
     private static StaticFileMiddleware CreateStaticFileMiddleware(
         RequestDelegate next,
@@ -76,18 +105,11 @@ public class PlotNetMiddleware
         var staticFileOptions = new StaticFileOptions
         {
             RequestPath = string.IsNullOrEmpty(options.RoutePrefix) ? string.Empty : $"/{options.RoutePrefix}",
-            FileProvider = new EmbeddedFileProvider(typeof(PlotNetMiddleware).GetTypeInfo().Assembly, EmbeddedFileNamespace),
+            FileProvider = new ManifestEmbeddedFileProvider(typeof(PlotNetMiddleware).GetTypeInfo().Assembly),
         };
 
         return new StaticFileMiddleware(next, hostingEnv, Options.Create(staticFileOptions), loggerFactory);
     }
-
-    private void RespondWithRedirect(HttpResponse response, string location)
-    {
-        response.StatusCode = 301;
-        response.Headers["Location"] = location;
-    }
-
     private async Task RespondWithIndexHtml(HttpResponse response)
     {
         response.StatusCode = 200;
@@ -113,6 +135,24 @@ public class PlotNetMiddleware
                 { "%(HeadContent)", _options.HeadContent },
                 // { "%(ConfigObject)", JsonSerializer.Serialize(_options.ConfigObject, _jsonSerializerOptions) },
             };
+    }
+
+    private Routes? GetRoute(string path = "")
+    {
+
+        if (Regex.IsMatch(path, $"^/?{Regex.Escape(_options.RoutePrefix)}/?$", RegexOptions.IgnoreCase))
+            return Routes.Redirect;
+
+        if (Regex.IsMatch(path, $"^/{Regex.Escape(_options.RoutePrefix)}/?index.html$", RegexOptions.IgnoreCase))
+            return Routes.Index;
+
+        if (Regex.IsMatch(path, $"^/{Regex.Escape(_options.RoutePrefix)}.json/?$", RegexOptions.IgnoreCase))
+            return Routes.JSON;
+
+        if (Regex.IsMatch(path, $"^/{Regex.Escape(_options.RoutePrefix)}.xml/?$", RegexOptions.IgnoreCase))
+            return Routes.XML;
+
+        return null;
     }
 
 }
