@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PlotNet;
 
@@ -16,5 +17,5 @@ public class PlotNetOptions
     public Func<Stream?> IndexStream { get; set; } = () => typeof(PlotNetOptions)
             .GetTypeInfo()
             .Assembly
-            .GetManifestResourceStream("Swashbuckle.AspNetCore.SwaggerUI.index.html");
+            .GetManifestResourceStream("PlotNet.index.html");
 }
