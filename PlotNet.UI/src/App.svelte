@@ -8,11 +8,15 @@
   function getGraphData() {
     // TODO use fetch call to get data
     return Promise.resolve([
+      { group: "nodes", data: { id: "n0" }, position: { x: 100, y: 100 } },
+      { group: "nodes", data: { id: "n1" }, position: { x: 200, y: 200 } },
+      { group: "edges", data: { id: "e0", source: "n0", target: "n1" } },
+
       {
-        data: { id: "a" },
+        data: { id: "a", weight: 75 },
       },
       {
-        data: { id: "b" },
+        data: { id: "b", weight: 5 },
       },
       {
         data: { id: "ab", source: "a", target: "b" },
@@ -23,7 +27,6 @@
 
 <nav>
   <div class="nav-container">
-
     <img src={logo} alt="Svelte Logo" />
   </div>
 </nav>
@@ -47,7 +50,6 @@
     flex-direction: row;
     justify-content: center;
     background-color: #efefef;
-    /* background-color: #3f3f3f; */
     overflow: visible;
     height: 6rem;
   }
@@ -67,40 +69,15 @@
   }
 
   main {
-    text-align: center;
-    padding: 1em;
+    padding: 0;
     margin: 0 auto;
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    min-height: calc(100vh - (6rem));
   }
 
   img {
     height: 7rem;
     width: 7rem;
   }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
-  }
-
 </style>

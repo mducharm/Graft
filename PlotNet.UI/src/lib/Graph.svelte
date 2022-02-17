@@ -2,15 +2,16 @@
   import cytoscape from "cytoscape";
   import { onMount } from "svelte";
 
-  let container;
+  let el;
   let graph;
 
   export let data;
 
   onMount(() => {
     graph = cytoscape({
-      container,
+      container: el,
       elements: data,
+      wheelSensitivity: 0.2,
       style: [
         // the stylesheet for the graph
         {
@@ -39,30 +40,16 @@
       },
     });
 
-    // graph.add([
-    //   { group: "nodes", data: { id: "n0" }, position: { x: 100, y: 100 } },
-    //   { group: "nodes", data: { id: "n1" }, position: { x: 200, y: 200 } },
-    //   { group: "edges", data: { id: "e0", source: "n0", target: "n1" } },
-    // ]);
   });
 </script>
-test
-<div bind:this={container} class="container" />
+
+<div bind:this={el} class="graph" />
 
 <style>
-  .container {
-    width: 100%;
-    height: 100%;
-    background-color: green;
-    /* position: absolute; */
+  .graph {
+    flex-grow: 1;
     top: 0px;
     left: 0px;
-    border: 1px;
-    border-color: blue;
-  }
-  .container > canvas {
-    width: 100%;
-    height: 100%;
-
   }
 </style>
+
