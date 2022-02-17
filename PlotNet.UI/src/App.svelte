@@ -2,7 +2,7 @@
   import "carbon-components-svelte/css/white.css";
   import { Button } from "carbon-components-svelte";
 
-  import logo from "./assets/PlotNet-logos.jpeg";
+  import logo from "./assets/PlotNet-logos_transparent.png";
   import Graph from "./lib/Graph.svelte";
 
   function getGraphData() {
@@ -22,7 +22,10 @@
 </script>
 
 <nav>
-  <img src={logo} alt="Svelte Logo" />
+  <div class="nav-container">
+
+    <img src={logo} alt="Svelte Logo" />
+  </div>
 </nav>
 <main>
   {#await getGraphData()}
@@ -42,7 +45,9 @@
   nav {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     background-color: #efefef;
+    /* background-color: #3f3f3f; */
     overflow: visible;
     height: 6rem;
   }
@@ -57,6 +62,10 @@
     height: 100%;
   }
 
+  .nav-container {
+    max-width: 1460px;
+  }
+
   main {
     text-align: center;
     padding: 1em;
@@ -64,8 +73,6 @@
   }
 
   img {
-    border-radius: 50%;
-    border: 1px solid rgb(194, 194, 194);
     height: 7rem;
     width: 7rem;
   }
