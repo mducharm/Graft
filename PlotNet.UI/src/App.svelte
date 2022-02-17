@@ -1,29 +1,60 @@
 <script lang="ts">
-  import logo from './assets/svelte.png'
-  import Counter from './lib/Counter.svelte'
+  import "carbon-components-svelte/css/white.css";
+  import { Button } from "carbon-components-svelte";
+
+  import logo from "./assets/PlotNet-logos.jpeg";
+  import Graph from "./lib/Graph.svelte";
+
+  function getGraphData() {
+    // TODO use fetch call to get data
+    return Promise.resolve([
+      {
+        data: { id: "a" },
+      },
+      {
+        data: { id: "b" },
+      },
+      {
+        data: { id: "ab", source: "a", target: "b" },
+      },
+    ]);
+  }
 </script>
 
-<main>
+<nav>
   <img src={logo} alt="Svelte Logo" />
-  <h1>Hello Typescript!</h1>
-
-  <Counter />
-
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
+</nav>
+<main>
+  {#await getGraphData()}
+    <p>...waiting</p>
+  {:then data}
+    {#if data.length === 0}
+      <p>No services found.</p>
+    {:else}
+      <Graph {data} />
+    {/if}
+  {:catch error}
+    <p style="color: red">{error.message}</p>
+  {/await}
 </main>
 
 <style>
+  nav {
+    display: flex;
+    flex-direction: row;
+    background-color: #efefef;
+    overflow: visible;
+    height: 6rem;
+  }
   :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0;
+    height: 100%;
+  }
+  :global(html, body) {
+    margin: 0;
+    height: 100%;
   }
 
   main {
@@ -33,8 +64,10 @@
   }
 
   img {
-    height: 16rem;
-    width: 16rem;
+    border-radius: 50%;
+    border: 1px solid rgb(194, 194, 194);
+    height: 7rem;
+    width: 7rem;
   }
 
   h1 {
@@ -62,4 +95,5 @@
       max-width: none;
     }
   }
+
 </style>
