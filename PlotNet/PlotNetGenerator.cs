@@ -5,7 +5,7 @@ using PlotNet.Models;
 
 namespace PlotNet;
 
-public class PlotNetGenerator
+public static class PlotNetGenerator
 {
 
     public static IEnumerable<ServiceData> GetServiceData(IServiceCollection services)
@@ -31,11 +31,57 @@ public class PlotNetGenerator
             .Select(p => p.GetType())
             .Where(p => p.IsInterface);
 
-        foreach(var t in types)
+        foreach (var t in types)
             yield return t;
 
         yield break;
     }
 
+    internal static GraphDTO GeneratePayload(IServiceCollection services)
+    {
+        var serviceData = GetServiceData(services);
+
+        List<Node> nodes = new();
+        List<Edge> edges = new();
+
+        foreach (var service in serviceData)
+        {
+            var (impl, iface, lifetime) = service;
+
+            Node interfaceNode = GetOrCreate(iface.Name);
+
+            interfaceNode.Data["Lifetime"] = lifetime.ToString();
+
+            nodes.Add(interfaceNode);
+
+            if (impl == null)
+                continue;
+
+            Node implNode = GetOrCreate(impl.Name);
+
+            implNode.Data["Lifetime"] = lifetime.ToString();
+            implNode.Data["Parent"] = interfaceNode.Id;
+
+            nodes.Add(implNode);
+
+            edges.Add(new(interfaceNode.Id, implNode.Id));
+
+            var interfaces = GetInterfacesFromConstructor(service);
+
+            foreach(var injectedInterface in interfaces)
+            {
+                Node injectedInterfaceNode = GetOrCreate(injectedInterface.Name);
+
+                injectedInterfaceNode.Data["Parent"] = implNode.Id;
+
+                edges.Add(new(implNode.Id, injectedInterfaceNode.Id));
+            }
+            
+        }
+
+        return new GraphDTO(nodes, edges);
+
+        Node GetOrCreate(string id) => nodes.FirstOrDefault(n => n.Id == id) ?? new(id, new());
+    }
 
 }
