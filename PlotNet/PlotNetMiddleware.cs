@@ -21,9 +21,8 @@ public class PlotNetMiddleware
     private readonly PlotNetOptions _options;
     private readonly StaticFileMiddleware _staticFileMiddleware;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
-    private readonly XmlSerializer _xmlSerializer;
 
-    enum Routes { Redirect, Index, JSON, XML }
+    enum Routes { Redirect, Index, JSON }
 
     public PlotNetMiddleware(
         RequestDelegate next,
@@ -45,8 +44,6 @@ public class PlotNetMiddleware
 #endif
         _jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         _jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
-
-        _xmlSerializer = new XmlSerializer(typeof(GraphDTO));
     }
 
     public async Task Invoke(HttpContext httpContext)
@@ -79,11 +76,6 @@ public class PlotNetMiddleware
                 await RespondWithJSON(httpContext.Response);
                 return;
             }
-            if (route == Routes.XML)
-            {
-                await RespondWithXML(httpContext.Response);
-                return;
-            }
 
         }
 
@@ -91,21 +83,6 @@ public class PlotNetMiddleware
 
     }
 
-    private async Task RespondWithXML(HttpResponse response)
-    {
-        response.StatusCode = 200;
-        response.ContentType = "text/xml;charset=utf-8";
-
-        GraphDTO graphDTO = PlotNetGenerator.GeneratePayload(_options.Services);
-        
-        using var sww = new StringWriter();
-        using XmlWriter writer = XmlWriter.Create(sww);
-
-        _xmlSerializer.Serialize(writer, graphDTO);
-        string? graphPayload = sww.ToString() ?? "";
-
-        await response.WriteAsync(graphPayload, Encoding.UTF8);
-    }
 
     private async Task RespondWithJSON(HttpResponse response)
     {
@@ -173,9 +150,6 @@ public class PlotNetMiddleware
 
         if (Regex.IsMatch(path, $"^/{Regex.Escape(_options.RoutePrefix)}.json/?$", RegexOptions.IgnoreCase))
             return Routes.JSON;
-
-        if (Regex.IsMatch(path, $"^/{Regex.Escape(_options.RoutePrefix)}.xml/?$", RegexOptions.IgnoreCase))
-            return Routes.XML;
 
         return null;
     }
