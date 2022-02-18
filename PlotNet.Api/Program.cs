@@ -11,32 +11,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IServiceA, ServiceA>();
 builder.Services.AddTransient<IServiceB, ServiceB>();
 
-foreach (var service in builder.Services)
-{
-    // Console.WriteLine(service.ToString());
-    List<ConstructorInfo>? info = service.ImplementationType?.GetConstructors().ToList() ?? new List<ConstructorInfo>();
+ServiceCollection services = new();
 
-    foreach (var i in info)
-    {
-        if (i.IsPublic)
-        {
-            Console.WriteLine($"constructor of {service.ImplementationType?.Name}");
-            foreach (var p in i.GetParameters())
-            {
-                Console.WriteLine(p.Name);
-                // Console.WriteLine(p.GetType().Name);
-                // Console.WriteLine(p.ParameterType);
-
-            }
-                Console.WriteLine("___");
-        }
-    }
-
-
-    Console.WriteLine(service.ImplementationType?.Name);
-    Console.WriteLine(service.ServiceType.Name);
-    Console.WriteLine(service.Lifetime);
-}
+services.AddTransient<IServiceA, ServiceA>();
+services.AddTransient<IServiceB, ServiceB>();
 
 var app = builder.Build();
 
@@ -54,12 +32,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UsePlotNet(builder.Services);
-// app.UseStaticFiles(new StaticFileOptions
-// {
-//     // FileProvider = new PhysicalFileProvider(
-//     FileProvider = new EmbeddedFileProvider(
-//            Path.Combine(builder.Environment.ContentRootPath, "MyStaticFiles")),
-//     RequestPath = "/StaticFiles"
-// });
 
 app.Run();
