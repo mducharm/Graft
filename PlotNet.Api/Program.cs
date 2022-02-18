@@ -31,6 +31,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UsePlotNet(builder.Services);
+app.UsePlotNet(services);
 
 app.Run();
