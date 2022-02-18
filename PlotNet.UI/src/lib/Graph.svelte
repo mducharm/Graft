@@ -1,11 +1,12 @@
 <script lang="ts">
   import cytoscape from "cytoscape";
+  import type { CytoscapeElement } from "src/models/CytoscapeElement";
   import { onMount } from "svelte";
 
   let el;
   let graph;
 
-  export let data;
+  export let data: CytoscapeElement[];
 
   onMount(() => {
     graph = cytoscape({
@@ -39,7 +40,6 @@
         rows: 1,
       },
     });
-
   });
 </script>
 
@@ -52,4 +52,3 @@
     left: 0px;
   }
 </style>
-

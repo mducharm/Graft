@@ -4,24 +4,29 @@
 
   import logo from "./assets/PlotNet-logos_transparent.png";
   import Graph from "./lib/Graph.svelte";
+import type { GraphDTO } from "./models/GraphDTO";
+import { CytoscapeElement, mapToElement } from "./models/CytoscapeElement";
 
-  function getGraphData() {
+  function getGraphData(): Promise<CytoscapeElement[]>{
+    return fetch('/plotnet.json')
+      .then(r => r.json())
+      .then(r => mapToElement(r));
     // TODO use fetch call to get data
-    return Promise.resolve([
-      { group: "nodes", data: { id: "n0" }, position: { x: 100, y: 100 } },
-      { group: "nodes", data: { id: "n1" }, position: { x: 200, y: 200 } },
-      { group: "edges", data: { id: "e0", source: "n0", target: "n1" } },
+    // return Promise.resolve([
+    //   { group: "nodes", data: { id: "n0" }, position: { x: 100, y: 100 } },
+    //   { group: "nodes", data: { id: "n1" }, position: { x: 200, y: 200 } },
+    //   { group: "edges", data: { id: "e0", source: "n0", target: "n1" } },
 
-      {
-        data: { id: "a", weight: 75 },
-      },
-      {
-        data: { id: "b", weight: 5 },
-      },
-      {
-        data: { id: "ab", source: "a", target: "b" },
-      },
-    ]);
+    //   {
+    //     data: { id: "a", weight: 75 },
+    //   },
+    //   {
+    //     data: { id: "b", weight: 5 },
+    //   },
+    //   {
+    //     data: { id: "ab", source: "a", target: "b" },
+    //   },
+    // ]);
   }
 </script>
 
