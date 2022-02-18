@@ -95,6 +95,7 @@ public class PlotNetMiddleware
         throw new NotImplementedException();
     }
 
+
     private static StaticFileMiddleware CreateStaticFileMiddleware(
         RequestDelegate next,
         IWebHostEnvironment hostingEnv,
@@ -154,5 +155,4 @@ public class PlotNetMiddleware
 
         return null;
     }
-
 }
