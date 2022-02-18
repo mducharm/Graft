@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PlotNet.Models;
 
 namespace PlotNet;
 
@@ -18,6 +21,7 @@ public class PlotNetMiddleware
     private readonly PlotNetOptions _options;
     private readonly StaticFileMiddleware _staticFileMiddleware;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
+    private readonly XmlSerializer _xmlSerializer;
 
     enum Routes { Redirect, Index, JSON, XML }
 
@@ -41,6 +45,8 @@ public class PlotNetMiddleware
 #endif
         _jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         _jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
+
+        _xmlSerializer = new XmlSerializer(typeof(GraphDTO));
     }
 
     public async Task Invoke(HttpContext httpContext)
@@ -85,14 +91,32 @@ public class PlotNetMiddleware
 
     }
 
-    private Task RespondWithXML(HttpResponse response)
+    private async Task RespondWithXML(HttpResponse response)
     {
-        throw new NotImplementedException();
+        response.StatusCode = 200;
+        response.ContentType = "text/xml;charset=utf-8";
+
+        GraphDTO graphDTO = PlotNetGenerator.GeneratePayload(_options.Services);
+        
+        using var sww = new StringWriter();
+        using XmlWriter writer = XmlWriter.Create(sww);
+
+        _xmlSerializer.Serialize(writer, graphDTO);
+        string? graphPayload = sww.ToString() ?? "";
+
+        await response.WriteAsync(graphPayload, Encoding.UTF8);
     }
 
-    private Task RespondWithJSON(HttpResponse response)
+    private async Task RespondWithJSON(HttpResponse response)
     {
-        throw new NotImplementedException();
+        response.StatusCode = 200;
+        response.ContentType = "text/json;charset=utf-8";
+
+        GraphDTO graphDTO = PlotNetGenerator.GeneratePayload(_options.Services);
+
+        var graphPayload = JsonSerializer.Serialize(graphDTO, _jsonSerializerOptions);
+
+        await response.WriteAsync(graphPayload, Encoding.UTF8);
     }
 
 
