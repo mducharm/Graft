@@ -8,6 +8,8 @@ import type { GraphDTO } from "./models/GraphDTO";
 import { CytoscapeElement, mapToElement } from "./models/CytoscapeElement";
 
   function getGraphData(): Promise<CytoscapeElement[]>{
+    // return Promise.resolve(JSON.parse(`{"nodes":[{"id":"IServiceA","data":{"Lifetime":"Transient"}},{"id":"ServiceA","data":{"Lifetime":"Transient","Parent":"IServiceA"}},{"id":"IServiceB","data":{"Lifetime":"Transient"}},{"id":"ServiceB","data":{"Lifetime":"Transient","Parent":"IServiceB"}}],"edges":[]}`))
+    //   .then(r => mapToElement(r));
     return fetch('/plotnet.json')
       .then(r => r.json())
       .then(r => mapToElement(r));
