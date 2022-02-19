@@ -28,7 +28,7 @@ public static class PlotNetGenerator
         var types = constructorInfos
             .Where(i => i.IsPublic)
             .SelectMany(i => i.GetParameters())
-            .Select(p => p.GetType())
+            .Select(p => p.ParameterType)
             .Where(p => p.IsInterface);
 
         foreach (var t in types)
@@ -64,15 +64,11 @@ public static class PlotNetGenerator
 
             nodes.Add(implNode);
 
-            edges.Add(new(interfaceNode.Id, implNode.Id));
-
             var interfaces = GetInterfacesFromConstructor(service);
 
             foreach(var injectedInterface in interfaces)
             {
                 Node injectedInterfaceNode = GetOrCreate(injectedInterface.Name);
-
-                injectedInterfaceNode.Data["Parent"] = implNode.Id;
 
                 edges.Add(new(implNode.Id, injectedInterfaceNode.Id));
             }
