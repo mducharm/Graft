@@ -5,6 +5,7 @@ export type CytoscapeElement = {
     group: string,
     data: {
         id: string
+        parent?: string
         source?: string
         target?: string
     },
@@ -18,7 +19,8 @@ export function mapToElement(graph: GraphDTO) : CytoscapeElement[] {
         ...graph.nodes.map(n => ({
             group: "nodes",
             data: {
-                id: n.id
+                id: n.id,
+                parent: n.data.Parent,
             },
             scratch:{}
         })),

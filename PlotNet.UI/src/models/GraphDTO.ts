@@ -7,8 +7,8 @@ export interface GraphDTO {
 export interface Node {
     id: string,
     data: {
-        lifetime: string,
-        parent: string,
+        Lifetime: string,
+        Parent: string,
     }
 }
 export interface Edge {
