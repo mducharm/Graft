@@ -10,11 +10,15 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IServiceA, ServiceA>();
 builder.Services.AddTransient<IServiceB, ServiceB>();
+builder.Services.AddTransient<IServiceC, ServiceC>();
+builder.Services.AddTransient<IServiceD, ServiceD>();
 
 ServiceCollection services = new();
 
 services.AddTransient<IServiceA, ServiceA>();
 services.AddTransient<IServiceB, ServiceB>();
+services.AddTransient<IServiceC, ServiceC>();
+services.AddTransient<IServiceD, ServiceD>();
 
 var app = builder.Build();
 
