@@ -21,7 +21,9 @@ export function mapToElement(graph: GraphDTO) : CytoscapeElement[] {
             data: {
                 id: n.id,
                 parent: n.data.Parent,
+                lifetime: n.data.Lifetime,
             },
+            classes: n.data.Parent === undefined ? n.data.Lifetime.toLowerCase() : "",
             scratch:{}
         })),
         ...graph.edges.map(e => ({

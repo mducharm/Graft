@@ -13,37 +13,32 @@
       container: el,
       elements: data,
       wheelSensitivity: 0.2,
-      // style: [
-      //   // the stylesheet for the graph
-      //   {
-      //     selector: "node",
-      //     style: {
-      //       "background-color": "#666",
-      //       label: "data(id)",
-      //     },
-      //   },
-
-      //   {
-      //     selector: "edge",
-      //     style: {
-      //       width: 3,
-      //       "line-color": "#ccc",
-      //       "target-arrow-color": "#ccc",
-      //       "target-arrow-shape": "triangle",
-      //       "curve-style": "bezier",
-      //     },
-      //   },
-      // ],
-
       boxSelectionEnabled: false,
-
       style: [
+        {
+          selector: ".transient",
+          css: {
+            "background-color": "#4EA5D9"
+          }
+        },
+        {
+          selector: ".scoped",
+          css: {
+            "background-color": "#e7d146"
+          }
+        },
+        {
+          selector: ".singleton",
+          css: {
+            "background-color": "#f87060"
+          }
+        },
         {
           selector: "node",
           css: {
             content: "data(id)",
-            "text-valign": "center",
-            "text-halign": "center",
+            "text-valign": "top",
+            "text-halign": "left",
           },
         },
         {
