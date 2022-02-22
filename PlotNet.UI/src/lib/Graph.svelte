@@ -3,6 +3,10 @@
   import type { CytoscapeElement } from "src/models/CytoscapeElement";
   import { onMount } from "svelte";
   import { styles } from "./GraphStyles";
+  import coseBilkent from "cytoscape-cose-bilkent";
+  import { graphManager, Layout } from "../stores/graph.manager";
+
+  cytoscape.use(coseBilkent);
 
   let el;
   let graph;
@@ -17,9 +21,20 @@
       boxSelectionEnabled: false,
       style: styles,
       layout: {
-        name: "grid",
-        rows: 1,
+        name: "circle",
+        // rows: 1,
       },
+    });
+
+    graphManager.subscribe((value) => {
+      if (value.layout !== null)
+      {
+        const layout = graph.layout({
+          name: value.layout,
+        });
+
+        layout.run();
+      }
     });
   });
 </script>
