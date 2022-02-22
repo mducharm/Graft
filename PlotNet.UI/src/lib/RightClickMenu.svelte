@@ -19,16 +19,17 @@
 </script>
 
 <ContextMenu>
-  <ContextMenuOption indented labelText="Open" />
+  <!-- <ContextMenuOption indented labelText="Open" /> -->
   <ContextMenuDivider />
   <ContextMenuRadioGroup bind:selectedId labelText="Layout">
     <ContextMenuOption id="circle" labelText="Circle" />
     <ContextMenuOption id="grid" labelText="Grid" />
     <ContextMenuOption id="cose" labelText="CoSE" />
     <ContextMenuOption id="cose-bilkent" labelText="CoSE-Bilkent" />
+    <ContextMenuOption id="concentric" labelText="Concentric" />
   </ContextMenuRadioGroup>
   <ContextMenuDivider />
-  <ContextMenuOption selectable labelText="Lock layer" />
+  <!-- <ContextMenuOption selectable labelText="Lock layer" /> -->
 </ContextMenu>
 
 <style>
