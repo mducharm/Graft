@@ -70,7 +70,7 @@ public static class PlotNetGenerator
             {
                 Node injectedInterfaceNode = GetOrCreate(injectedInterface.Name);
 
-                edges.Add(new(implNode.Id, injectedInterfaceNode.Id));
+                edges.Add(new(injectedInterfaceNode.Id, implNode.Id));
             }
             
         }
