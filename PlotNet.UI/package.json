@@ -21,6 +21,7 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
-    "cytoscape": "^3.21.0"
+    "cytoscape": "^3.21.0",
+    "cytoscape-cose-bilkent": "^4.1.0"
   }
 }
