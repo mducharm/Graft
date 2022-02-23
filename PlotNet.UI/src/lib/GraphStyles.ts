@@ -2,19 +2,22 @@ export const styles = [
     {
         selector: ".transient",
         css: {
-            "background-color": "#4EA5D9"
+            "background-color": "#4EA5D9",
+            "background-opacity": 0.5,
         }
     },
     {
         selector: ".scoped",
         css: {
-            "background-color": "#e7d146"
+            "background-color": "#ffb11f",
+            "background-opacity": 0.5,
         }
     },
     {
         selector: ".singleton",
         css: {
-            "background-color": "#f87060"
+            "background-color": "#f87060",
+            "background-opacity": 0.5,
         }
     },
     {
