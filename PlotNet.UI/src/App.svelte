@@ -2,26 +2,50 @@
   import "carbon-components-svelte/css/white.css";
   import Graph from "./lib/Graph.svelte";
   import { CytoscapeElement, mapToElement } from "./models/CytoscapeElement";
-  import dummy_data from './dummy_data.json';
+  import dummy_data from "./dummy_data.json";
   import type { GraphDTO } from "./models/GraphDTO";
   import NavBar from "./lib/NavBar.svelte";
-import RightClickMenu from "./lib/RightClickMenu.svelte";
+  import RightClickMenu from "./lib/RightClickMenu.svelte";
+  import { graphManager } from "./stores/graph.manager";
+  import { onMount } from "svelte";
 
-  function getGraphData(): Promise<CytoscapeElement[]>{
+  let elements = [];
+
+  onMount(async () => {
+    // elements = await fetch('/plotnet.json')
+    //   .then(r => r.json())
+    //   .then(r => mapToElement(r));
+
+    elements = await Promise.resolve(dummy_data as GraphDTO).then((r) => mapToElement(r));
+
+    $graphManager.elements = elements;
+
+  });
+
+  function getGraphData(): Promise<CytoscapeElement[]> {
     // return Promise.resolve(JSON.parse(`{"nodes":[{"id":"IServiceA","data":{"Lifetime":"Transient"}},{"id":"ServiceA","data":{"Lifetime":"Transient","Parent":"IServiceA"}},{"id":"IServiceB","data":{"Lifetime":"Transient"}},{"id":"ServiceB","data":{"Lifetime":"Transient","Parent":"IServiceB"}}],"edges":[{"a":"ServiceA","b":"IServiceB"}]}`))
-    return Promise.resolve(dummy_data as GraphDTO)
-      .then(r => mapToElement(r));
+    return Promise.resolve(dummy_data as GraphDTO).then((r) => {
+      let elements = mapToElement(r);
+
+      return mapToElement(r);
+    });
     // return fetch('/plotnet.json')
     //   .then(r => r.json())
     //   .then(r => mapToElement(r));
   }
+
 </script>
 
-<NavBar></NavBar>
-<RightClickMenu></RightClickMenu>
+<NavBar />
+<RightClickMenu />
 
 <main>
-  {#await getGraphData()}
+    {#if $graphManager.elements.length === 0}
+      <p>No services found.</p>
+    {:else}
+      <Graph data={$graphManager.elements} />
+    {/if}
+  <!-- {#await getGraphData()}
     <p>...waiting</p>
   {:then data}
     {#if data.length === 0}
@@ -31,11 +55,11 @@ import RightClickMenu from "./lib/RightClickMenu.svelte";
     {/if}
   {:catch error}
     <p style="color: red">{error.message}</p>
-  {/await}
+  {/await} -->
 </main>
 
 <style>
-    :root {
+  :root {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     margin: 0;
@@ -53,5 +77,4 @@ import RightClickMenu from "./lib/RightClickMenu.svelte";
     flex-flow: column-reverse nowrap;
     min-height: calc(100vh - (6rem));
   }
-
 </style>
