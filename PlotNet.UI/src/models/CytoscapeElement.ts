@@ -1,6 +1,3 @@
-import type { GraphDTO } from "./GraphDTO";
-
-
 export type CytoscapeElement = {
     group: string,
     data: {
@@ -12,28 +9,4 @@ export type CytoscapeElement = {
     scratch: {
         [p: string]: string
     },
-}
-
-export function mapToElement(graph: GraphDTO) : CytoscapeElement[] {
-    return [
-        ...graph.nodes.map(n => ({
-            group: "nodes",
-            data: {
-                id: n.id,
-                parent: n.data.Parent,
-                lifetime: n.data.Lifetime,
-            },
-            classes: n.data.Parent === undefined ? n.data.Lifetime.toLowerCase() : "",
-            scratch:{}
-        })),
-        ...graph.edges.map(e => ({
-            group: "edges",
-            data: {
-                id: `${e.a} - ${e.b}`,
-                source: e.a,
-                target: e.b,
-            },
-            scratch:{}
-        }))
-    ]
 }

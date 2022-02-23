@@ -1,7 +1,6 @@
 <script lang="ts">
   import "carbon-components-svelte/css/white.css";
   import Graph from "./lib/Graph.svelte";
-  import { CytoscapeElement, mapToElement } from "./models/CytoscapeElement";
   import dummy_data from "./dummy_data.json";
   import type { GraphDTO } from "./models/GraphDTO";
   import NavBar from "./lib/NavBar.svelte";
@@ -10,30 +9,13 @@
   import { onMount } from "svelte";
   import Legend from "./lib/Legend.svelte";
 
-  let elements = [];
-
   onMount(async () => {
-    // elements = await fetch('/plotnet.json')
-    //   .then(r => r.json())
-    //   .then(r => mapToElement(r));
 
-    elements = await Promise.resolve(dummy_data as GraphDTO).then((r) => mapToElement(r));
+    // let graphDTO = await fetch('/plotnet.json').then(r => r.json());
+    let graphDTO = await Promise.resolve(dummy_data as GraphDTO);
 
-    $graphManager.elements = elements;
-
+    graphManager.initialize(graphDTO);
   });
-
-  function getGraphData(): Promise<CytoscapeElement[]> {
-    // return Promise.resolve(JSON.parse(`{"nodes":[{"id":"IServiceA","data":{"Lifetime":"Transient"}},{"id":"ServiceA","data":{"Lifetime":"Transient","Parent":"IServiceA"}},{"id":"IServiceB","data":{"Lifetime":"Transient"}},{"id":"ServiceB","data":{"Lifetime":"Transient","Parent":"IServiceB"}}],"edges":[{"a":"ServiceA","b":"IServiceB"}]}`))
-    return Promise.resolve(dummy_data as GraphDTO).then((r) => {
-      let elements = mapToElement(r);
-
-      return mapToElement(r);
-    });
-    // return fetch('/plotnet.json')
-    //   .then(r => r.json())
-    //   .then(r => mapToElement(r));
-  }
 
 </script>
 

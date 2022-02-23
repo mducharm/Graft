@@ -8,7 +8,7 @@ export interface Node {
     id: string,
     data: {
         Lifetime: string,
-        Parent: string,
+        Parent?: string,
     }
 }
 export interface Edge {
