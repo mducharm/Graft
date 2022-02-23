@@ -24,8 +24,8 @@ export const styles = [
         selector: "node",
         css: {
             content: "data(id)",
-            "text-valign": "top",
-            "text-halign": "left",
+            "text-valign": "center",
+            "text-halign": "center",
         },
     },
     {

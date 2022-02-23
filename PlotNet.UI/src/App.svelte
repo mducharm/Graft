@@ -8,6 +8,7 @@
   import RightClickMenu from "./lib/RightClickMenu.svelte";
   import { graphManager } from "./stores/graph.manager";
   import { onMount } from "svelte";
+  import Legend from "./lib/Legend.svelte";
 
   let elements = [];
 
@@ -45,18 +46,8 @@
     {:else}
       <Graph data={$graphManager.elements} />
     {/if}
-  <!-- {#await getGraphData()}
-    <p>...waiting</p>
-  {:then data}
-    {#if data.length === 0}
-      <p>No services found.</p>
-    {:else}
-      <Graph {data} />
-    {/if}
-  {:catch error}
-    <p style="color: red">{error.message}</p>
-  {/await} -->
 </main>
+<Legend></Legend>
 
 <style>
   :root {

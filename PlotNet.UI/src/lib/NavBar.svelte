@@ -48,7 +48,6 @@
     background-color: #efefef;
     overflow: visible;
     height: 6rem;
-    max-width: 1460px;
     width: 100%;
   }
 
