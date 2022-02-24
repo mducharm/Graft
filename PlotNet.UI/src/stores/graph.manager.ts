@@ -37,10 +37,19 @@ function createGraphManager() {
         },
         toggleVisibility(el: CytoscapeElement) {
             update(g => {
+
+                let node = g.graph.$(`#` + el.data.id);
+                let edges = node.connectedEdges();
+                let childEdges = node.children().connectedEdges();
+                
                 if (el.isVisible) {
-                    g.graph.$(`#` + el.data.id).removeClass("hidden");
+                    node.removeClass("hidden");
+                    edges.removeClass("hidden");
+                    childEdges.removeClass("hidden");
                 } else {
-                    g.graph.$(`#` + el.data.id).addClass("hidden");
+                    node.addClass("hidden");
+                    edges.addClass("hidden");
+                    childEdges.addClass("hidden");
                 }
 
                 el.isVisible = !el.isVisible;
@@ -54,6 +63,7 @@ function createGraphManager() {
                 if (allSelected) {
 
                     g.graph.$("node").removeClass("hidden");
+                    g.graph.$("edge").removeClass("hidden");
                     g.elements = g.elements.map(e => {
                         e.isVisible = true;
                         return e;
@@ -63,6 +73,7 @@ function createGraphManager() {
                 }
 
                 g.graph.$("node").addClass("hidden");
+                g.graph.$("edge").addClass("hidden");
 
                 g.elements = g.elements.map(e => {
                     e.isVisible = false;
