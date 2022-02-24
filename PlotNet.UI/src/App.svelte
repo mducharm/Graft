@@ -10,26 +10,24 @@
   import Legend from "./lib/Legend.svelte";
 
   onMount(async () => {
-
     // let graphDTO = await fetch('/plotnet.json').then(r => r.json());
     let graphDTO = await Promise.resolve(dummy_data as GraphDTO);
 
     graphManager.initialize(graphDTO);
   });
-
 </script>
 
 <NavBar />
 <RightClickMenu />
 
 <main>
-    {#if $graphManager.elements.length === 0}
-      <p>No services found.</p>
-    {:else}
-      <Graph data={$graphManager.elements} />
-    {/if}
+  {#if $graphManager.elements.length === 0}
+    <p>No services found.</p>
+  {:else}
+    <Graph />
+  {/if}
 </main>
-<Legend></Legend>
+<Legend />
 
 <style>
   :root {
