@@ -25,11 +25,13 @@ function createGraphManager() {
         }),
         layout(l: Layout) {
             update(g => {
-                const layout = g.graph.layout({
-                    name: l,
-                  });
-          
-                layout.run();
+                if (g.graph) {
+                    const layout = g.graph.layout({
+                        name: l,
+                      });
+              
+                    layout.run();
+                }
                 return g;
             })
         },
