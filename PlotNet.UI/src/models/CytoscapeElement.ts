@@ -1,5 +1,6 @@
 export type CytoscapeElement = {
     group: string,
+    isVisible?: boolean,
     data: {
         id: string
         parent?: string
@@ -7,6 +8,6 @@ export type CytoscapeElement = {
         target?: string
     },
     scratch: {
-        [p: string]: string
+        [p: string]: string | boolean,
     },
 }

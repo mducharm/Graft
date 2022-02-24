@@ -10,15 +10,21 @@
   import LogoGithub32 from "carbon-icons-svelte/lib/LogoGithub32";
   import Menu32 from "carbon-icons-svelte/lib/Menu32";
   import { graphManager } from "../stores/graph.manager";
+  import Drawer from "./Drawer.svelte";
 
   let open = false;
+
+  let showFilterServices = false;
+  let allSelected = true;
 </script>
 
 <nav>
   <div class="left">
     <OverflowMenu icon={Menu32}>
-      <OverflowMenuItem text="Filter Services" on:click={() => (open = true)} />
-      <OverflowMenuItem text="Settings" />
+      <OverflowMenuItem
+        text="Filter Services"
+        on:click={() => (showFilterServices = !showFilterServices)}
+      />
     </OverflowMenu>
   </div>
   <div class="center">
@@ -31,13 +37,32 @@
   </div>
 </nav>
 
-<Modal passiveModal bind:open modalHeading="Filter Services" on:open on:close>
-  <p>Create a new Cloudant database in the US South region.</p>
+<Drawer bind:open={showFilterServices}>
+  <div slot="top">
+    <Checkbox
+      labelText={"Select/Deselect All"}
+      bind:checked={allSelected}
+      on:click={() => {
+        graphManager.toggleSelectAll(allSelected);
+        allSelected = !allSelected;
+      }}
+    />
+  </div>
 
-  {#each $graphManager.elements as el}
-    <Checkbox labelText={el.data.id} />
-  {/each}
-</Modal>
+  <div slot="body">
+    {#each $graphManager.elements as el}
+      {#if el.scratch.isInterface}
+        <Checkbox
+          labelText={el.data.id}
+          bind:checked={el.isVisible}
+          on:click={() => {
+            graphManager.toggleVisibility(el);
+          }}
+        />
+      {/if}
+    {/each}
+  </div>
+</Drawer>
 
 <style>
   nav {

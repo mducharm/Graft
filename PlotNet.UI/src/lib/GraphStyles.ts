@@ -21,6 +21,13 @@ export const styles = [
         }
     },
     {
+        selector: ".hidden",
+        css: {
+            "background-color": "blue",
+            "opacity": 0,
+        }
+    },
+    {
         selector: "node",
         css: {
             content: "data(id)",

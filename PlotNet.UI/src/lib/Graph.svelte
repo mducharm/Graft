@@ -9,33 +9,23 @@
   cytoscape.use(coseBilkent);
 
   let el;
-  let graph;
 
-  export let data: CytoscapeElement[];
 
   onMount(() => {
-    graph = cytoscape({
+    $graphManager.graph = cytoscape({
       container: el,
-      elements: data,
+      elements: $graphManager.elements,
       wheelSensitivity: 0.2,
       boxSelectionEnabled: false,
       style: styles,
       layout: {
-        name: "circle",
+        name: $graphManager.layout
         // rows: 1,
       },
     });
 
-    graphManager.subscribe((value) => {
-      if (value.layout !== null)
-      {
-        const layout = graph.layout({
-          name: value.layout,
-        });
+    // $graphManager.graph.$(`#IServiceA`).addClass("hidden");
 
-        layout.run();
-      }
-    });
   });
 </script>
 

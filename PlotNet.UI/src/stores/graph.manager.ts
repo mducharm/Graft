@@ -7,11 +7,11 @@ export type Layout = 'circle' | 'grid' | 'cose' | 'cose-bilkent' | 'concentric'
 
 function createGraphManager() {
     const { subscribe, set, update } = writable<GraphManager>({
+        graph: null,
         layout: "circle",
         elements: [],
+        elementsToFilter: [],
         initialGraphData: null,
-        nodeConfigs: new Map(),
-        edgeConfigs: new Map(),
     });
 
     return {
@@ -21,47 +21,70 @@ function createGraphManager() {
         initialize: (dto: GraphDTO) => update(g => {
             g.initialGraphData = dto;
             g.elements = mapToElements(dto);
-
-            for (let node of dto.nodes) {
-                g.nodeConfigs.set(node, {
-                    isVisible: true,
-                    isInterface: node.data.Parent === null,
-                })
-            }
-
-            for (let edge of dto.edges) {
-                g.edgeConfigs.set(edge, {
-                    isVisible: true,
-                })
-            }
-
             return g;
-        })
+        }),
+        layout(l: Layout) {
+            update(g => {
+                const layout = g.graph.layout({
+                    name: l,
+                  });
+          
+                layout.run();
+                return g;
+            })
+        },
+        toggleVisibility(el: CytoscapeElement) {
+            update(g => {
+                if (el.isVisible) {
+                    g.graph.$(`#` + el.data.id).removeClass("hidden");
+                } else {
+                    g.graph.$(`#` + el.data.id).addClass("hidden");
+                }
+
+                el.isVisible = !el.isVisible;
+
+                return g;
+            })
+
+        },
+        toggleSelectAll(allSelected: boolean) {
+            update(g => {
+                if (allSelected) {
+
+                    g.graph.$("node").removeClass("hidden");
+                    g.elements = g.elements.map(e => {
+                        e.isVisible = true;
+                        return e;
+                    })
+
+                    return g;
+                }
+
+                g.graph.$("node").addClass("hidden");
+
+                g.elements = g.elements.map(e => {
+                    e.isVisible = false;
+                    return e;
+                })
+
+                return g;
+            })
+        },
+
     }
 }
 
 export const graphManager = createGraphManager();
 
 export type GraphManager = {
+    graph: any,
     layout: Layout,
     elements: CytoscapeElement[],
     initialGraphData?: GraphDTO,
-    nodeConfigs: Map<Node, NodeConfig>,
-    edgeConfigs: Map<Edge, EdgeConfig>,
+    elementsToFilter: string[],
 }
 
-
-export type NodeConfig = {
-    isVisible: boolean,
-    isInterface: boolean,
-}
-
-export type EdgeConfig = {
-    isVisible: boolean
-}
-
-
-export function mapToElements(graph: GraphDTO) : CytoscapeElement[] {
+export function mapToElements(graph: GraphDTO): CytoscapeElement[] {
     return [
         ...graph.nodes.map(n => ({
             group: "nodes",
@@ -71,7 +94,10 @@ export function mapToElements(graph: GraphDTO) : CytoscapeElement[] {
                 lifetime: n.data.Lifetime,
             },
             classes: n.data.Parent === undefined ? n.data.Lifetime.toLowerCase() : "",
-            scratch:{}
+            scratch: {
+                isInterface: n.data?.Parent === undefined || n.data?.Parent?.length === 0,
+            },
+            isVisible: true,
         })),
         ...graph.edges.map(e => ({
             group: "edges",
@@ -80,7 +106,9 @@ export function mapToElements(graph: GraphDTO) : CytoscapeElement[] {
                 source: e.a,
                 target: e.b,
             },
-            scratch:{}
+            scratch: {
+            },
+            isVisible: true,
         }))
     ]
 }
