@@ -10,11 +10,9 @@
   import LogoGithub32 from "carbon-icons-svelte/lib/LogoGithub32";
   import Menu32 from "carbon-icons-svelte/lib/Menu32";
   import { graphManager } from "../stores/graph.manager";
+  import { storage } from "../stores/localStorage";
   import Drawer from "./Drawer.svelte";
 
-  let open = false;
-
-  let showFilterServices = false;
   let allSelected = true;
 </script>
 
@@ -23,7 +21,7 @@
     <OverflowMenu icon={Menu32}>
       <OverflowMenuItem
         text="Filter Services"
-        on:click={() => (showFilterServices = !showFilterServices)}
+        on:click={() => ($storage.showFilter = !$storage.showFilter)}
       />
     </OverflowMenu>
   </div>
@@ -37,7 +35,7 @@
   </div>
 </nav>
 
-<Drawer bind:open={showFilterServices}>
+<Drawer bind:open={$storage.showFilter}>
   <div slot="top">
     <Checkbox
       labelText={"Select/Deselect All"}
