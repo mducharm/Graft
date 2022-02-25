@@ -1,4 +1,7 @@
-![Graft logo](./Graft.UI/src/assets/Graft-logos.jpeg)
+<p align="center">
+  <img src="./Graft.UI/src/assets/Graft-logos.jpeg" width="350" alt="Graft Logo">
+</p>
+
 # Graft
 
 Like Swagger, but for visualizing your dependencies. Powered by Svelte + Cytoscape.js + .NET 6.
