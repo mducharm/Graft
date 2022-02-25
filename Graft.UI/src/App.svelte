@@ -8,6 +8,7 @@
   import { graphManager } from "./stores/graph.manager";
   import { onMount } from "svelte";
   import Legend from "./lib/Legend.svelte";
+  import { Modal } from "carbon-components-svelte";
 
   onMount(async () => {
     let graphDTO = await fetch('/graft.json').then(r => r.json());
@@ -22,7 +23,9 @@
 
 <main>
   {#if $graphManager.elements.length === 0}
-    <p>No services found.</p>
+    <Modal open passiveModal modalHeading="Error" on:open on:close>
+      <p>No services found.</p>
+    </Modal>
   {:else}
     <Graph />
   {/if}
