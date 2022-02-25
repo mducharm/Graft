@@ -24,10 +24,12 @@ using Graft;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<IServiceA, ServiceA>();
-builder.Services.AddTransient<IServiceB, ServiceB>();
+IServiceCollection services = new();
+
+services.AddTransient<IServiceA, ServiceA>();
+services.AddTransient<IServiceB, ServiceB>();
 
 var app = builder.Build();
 
-app.UseGraft(builder.Services);
+app.UseGraft(services);
 ```
