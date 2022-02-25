@@ -1,4 +1,4 @@
-# PlotNet
+# Graft
 
 Like Swagger, but for visualizing your dependencies. Powered by Svelte + Cytoscape.js + .NET 6.
 
@@ -7,7 +7,7 @@ Like Swagger, but for visualizing your dependencies. Powered by Svelte + Cytosca
 An example using the .NET 6 minimal APIs:
 
 ```csharp
-using PlotNet;
+using Graft;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,5 +16,5 @@ builder.Services.AddTransient<IServiceB, ServiceB>();
 
 var app = builder.Build();
 
-app.UsePlotNet(builder.Services);
+app.UseGraft(builder.Services);
 ```

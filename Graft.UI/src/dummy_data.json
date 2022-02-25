@@ -1,0 +1,70 @@
+{
+    "nodes": [
+        {
+            "id": "IServiceA",
+            "data": {
+                "Lifetime": "Transient"
+            }
+        },
+        {
+            "id": "ServiceA",
+            "data": {
+                "Lifetime": "Transient",
+                "Parent": "IServiceA"
+            }
+        },
+        {
+            "id": "IServiceB",
+            "data": {
+                "Lifetime": "Transient"
+            }
+        },
+        {
+            "id": "ServiceB",
+            "data": {
+                "Lifetime": "Transient",
+                "Parent": "IServiceB"
+            }
+        },
+        {
+            "id": "IServiceC",
+            "data": {
+                "Lifetime": "Singleton"
+            }
+        },
+        {
+            "id": "ServiceC",
+            "data": {
+                "Lifetime": "Singleton",
+                "Parent": "IServiceC"
+            }
+        },
+        {
+            "id": "IServiceD",
+            "data": {
+                "Lifetime": "Scoped"
+            }
+        },
+        {
+            "id": "ServiceD",
+            "data": {
+                "Lifetime": "Scoped",
+                "Parent": "IServiceD"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "a": "IServiceB",
+            "b": "ServiceA"
+        },
+        {
+            "a": "IServiceC",
+            "b": "ServiceA"
+        },
+        {
+            "a": "IServiceD",
+            "b": "ServiceC"
+        }
+    ]
+}
