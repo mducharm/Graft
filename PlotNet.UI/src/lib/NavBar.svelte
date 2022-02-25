@@ -1,5 +1,6 @@
 <script lang="ts">
-  import logo from "../assets/PlotNet-logos_transparent.png";
+  // import logo from "../assets/Graft-logos_transparent.png";
+  import logo from "../assets/Graft-logos_transparent.png";
   import {
     Button,
     Checkbox,
@@ -92,6 +93,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
   }
 
   .right {
@@ -103,8 +105,8 @@
   }
 
   img {
-    height: 7rem;
-    width: 7rem;
+    height: 10rem;
+    width: 10rem;
   }
 
   .github {
