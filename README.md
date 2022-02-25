@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./Graft.UI/src/assets/Graft-logos.jpeg" width="350" alt="Graft Logo">
+  <img src="./Graft.UI/src/assets/Graft-logos.jpeg" width="150" alt="Graft Logo">
 </p>
 
 # Graft
