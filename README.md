@@ -1,3 +1,4 @@
+![Graft logo](./Graft.UI/src/assets/Graft-logos.jpeg)
 # Graft
 
 Like Swagger, but for visualizing your dependencies. Powered by Svelte + Cytoscape.js + .NET 6.
